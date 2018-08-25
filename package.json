@@ -1,0 +1,13 @@
+{
+    "name": "botjao",
+    "version": "1.0.0",
+    "description": "BOTjão",
+    "main": "bot.js",
+    "author": "João Falcão",
+    "dependencies": {
+        "discord.js": "^11.4.2",
+        "discord.js-musicbot-addon": "^12.0.6",
+        "node-opus": "^0.3.0",
+        "opusscript": "0.0.6"
+    }
+}
