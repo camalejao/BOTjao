@@ -13,6 +13,9 @@ const config = require("./config.json");
 // carregando o arquivo de mensagens
 const mensagens = require("./mensagens.json");
 
+// lib para requisições http
+const request = require("request");
+
 
 bot.on("ready", () => {
     // roda se o bot iniciado e logado com sucesso
@@ -96,8 +99,51 @@ bot.on("message", async message => {
         mensagem += "\n```"; //termina a marcação do bloco de mensagem
         message.channel.send(mensagem);
     }
+
+    if (command === "myinstants") {
+
+        var search = encodeURI(args.join(" "));
+        var filename, results, rndm;
+
+        await request('https://api.cleanvoice.ru/myinstants/?type=many&search=' + search + '&offset=0&limit=100', { json: true }, (err, res, body) => {
+            if (err) {
+                return console.log(err);
+            }
+
+            results = body.count;
+
+            if (results != '0') {
+                results = Math.min(Math.max(parseInt(results), 0), 100);
+                rndm = Math.floor(Math.random() * results);
+
+                filename = body.items[rndm].filename;
+                title = body.items[rndm].title;
+
+                message.channel.send('https://www.myinstants.com/instant/' + title.replace(/[^a-zA-Z| ]/g, "").replace(/ /g, '-') + '/');
+
+                var voiceChannel = message.member.voiceChannel;
+                if (!voiceChannel) {
+                    return message.reply("Você precisa estar em um canal de voz >:(");
+                }
+                voiceChannel.join().then(connection => {
+                    const dispatcher = connection.play("https://www.myinstants.com/media/sounds/" + filename);
+                    dispatcher.setVolume(1);
+                    dispatcher.on("end", end => {
+                        voiceChannel.leave();
+                    });
+                }).catch(err => console.log(err));
+            }
+
+            else {
+                return message.reply("Nenhum resultado encontrado!");
+            }
+        });
+    }
+
 });
 
+
+// configura addon de música
 Music.start(bot, {
     prefix: config.prefix,                                      // Prefixo dos comandos
     global: false,                                              // queues espesificas para cada server
