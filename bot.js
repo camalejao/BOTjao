@@ -13,6 +13,9 @@ const config = require("./config.json");
 // carregando o arquivo de mensagens
 const mensagens = require("./mensagens.json");
 
+// carregando o arquivo de soundboard
+const soundboard = require("./soundboard.json");
+
 // lib para requisições http
 const request = require("request");
 
@@ -100,46 +103,48 @@ bot.on("message", async message => {
         message.channel.send(mensagem);
     }
 
-    if (command === "myinstants") {
+    if (command === "soundboard") {
+        var mensagem = "```Sound effects disponíveis:\n\n";
+        
+        for (var i = 0; i < soundboard.sounds.length; i++) {
+            mensagem += soundboard.sounds[i].titulo + "\n";
+        }
 
-        var search = encodeURI(args.join(" "));
-        var filename, results, rndm;
-
-        await request('https://api.cleanvoice.ru/myinstants/?type=many&search=' + search + '&offset=0&limit=100', { json: true }, (err, res, body) => {
-            if (err) {
-                return console.log(err);
-            }
-
-            results = body.count;
-
-            if (results != '0') {
-                results = Math.min(Math.max(parseInt(results), 0), 100);
-                rndm = Math.floor(Math.random() * results);
-
-                filename = body.items[rndm].filename;
-                title = body.items[rndm].title;
-
-                message.channel.send('https://www.myinstants.com/instant/' + title.replace(/[^a-zA-Z| ]/g, "").replace(/ /g, '-') + '/');
-
-                var voiceChannel = message.member.voiceChannel;
-                if (!voiceChannel) {
-                    return message.reply("Você precisa estar em um canal de voz >:(");
-                }
-                voiceChannel.join().then(connection => {
-                    const dispatcher = connection.playArbitraryInput("https://www.myinstants.com/media/sounds/" + filename);
-                    dispatcher.setVolume(1);
-                    dispatcher.on("end", end => {
-                        voiceChannel.leave();
-                    });
-                }).catch(err => console.log(err));
-            }
-
-            else {
-                return message.reply("Nenhum resultado encontrado!");
-            }
-        });
+        mensagem += "\nPara dar play, use: jao!sound nomedosoundeffect\n```";
+        message.channel.send(mensagem);
     }
 
+    if (command === "sound") {
+
+        const arg = args.join("");
+        var url;
+
+        if(arg===undefined){
+            return message.reply("soundeffect não encontrado :(");
+        }
+
+        for (var i = 0; i < soundboard.sounds.length; i++) {
+            if(arg === soundboard.sounds[i].titulo){
+                url = soundboard.sounds[i].url;
+            }
+        }
+
+        if(url===undefined){
+            return message.reply("soundeffect não encontrado :(");
+        }
+
+        var voiceChannel = message.member.voiceChannel;
+        if (!voiceChannel) {
+            return message.reply("você precisa estar em um canal de voz >:(");
+        }
+        voiceChannel.join().then(connection => {
+            const dispatcher = connection.playArbitraryInput(url);
+            dispatcher.setVolume(1);
+            dispatcher.on("end", end => {
+                voiceChannel.leave();
+            });
+        }).catch(err => console.log(err));
+    }
 });
 
 
