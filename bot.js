@@ -126,7 +126,7 @@ bot.on("message", async message => {
                     return message.reply("Você precisa estar em um canal de voz >:(");
                 }
                 voiceChannel.join().then(connection => {
-                    const dispatcher = connection.play("https://www.myinstants.com/media/sounds/" + filename);
+                    const dispatcher = connection.playArbitraryInput("https://www.myinstants.com/media/sounds/" + filename);
                     dispatcher.setVolume(1);
                     dispatcher.on("end", end => {
                         voiceChannel.leave();
