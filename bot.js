@@ -105,7 +105,7 @@ bot.on("message", async message => {
 
     if (command === "soundboard") {
         var mensagem = "```Sound effects disponíveis:\n\n";
-        
+
         for (var i = 0; i < soundboard.sounds.length; i++) {
             mensagem += soundboard.sounds[i].titulo + "\n";
         }
@@ -119,17 +119,17 @@ bot.on("message", async message => {
         const arg = args.join("");
         var url;
 
-        if(arg===undefined){
+        if (arg === undefined) {
             return message.reply("soundeffect não encontrado :(");
         }
 
         for (var i = 0; i < soundboard.sounds.length; i++) {
-            if(arg === soundboard.sounds[i].titulo){
+            if (arg === soundboard.sounds[i].titulo) {
                 url = soundboard.sounds[i].url;
             }
         }
 
-        if(url===undefined){
+        if (url === undefined) {
             return message.reply("soundeffect não encontrado :(");
         }
 
@@ -145,6 +145,34 @@ bot.on("message", async message => {
             });
         }).catch(err => console.log(err));
     }
+
+    if (command === "addsound") {
+
+        const nome = args[0];
+        const url = args[1];
+
+        //regex para validar url
+        var pattern = new RegExp('^(https?:\/\/)?' + // protocol
+            '((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|' + // domain name
+            '((\d{1,3}\.){3}\d{1,3}))' + // OR ip (v4) address
+            '(\:\d+)?(\/[-a-z\d%_.~+]*)*' + // port and path
+            '(\?[;&a-z\d%_.~+=-]*)?' + // query string
+            '(\#[-a-z\d_]*)?$', 'i'); // fragment locater
+
+        if (!pattern.test(url)) {
+            return message.reply("url inválida");
+        }
+
+        for (var i = 0; i < soundboard.sounds.length; i++) {
+            if (nome === soundboard.sounds[i].titulo) {
+                return message.reply("sound effect já existente, escolha outro nome");
+            }
+        }
+
+        soundboard.sounds.push({"titulo":nome, "url":url});
+        message.reply(nome + " adicionado");
+    }
+
 });
 
 
