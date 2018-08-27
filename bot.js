@@ -152,12 +152,7 @@ bot.on("message", async message => {
         const url = args[1];
 
         //regex para validar url
-        var pattern = new RegExp('^(https?:\/\/)?' + // protocol
-            '((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|' + // domain name
-            '((\d{1,3}\.){3}\d{1,3}))' + // OR ip (v4) address
-            '(\:\d+)?(\/[-a-z\d%_.~+]*)*' + // port and path
-            '(\?[;&a-z\d%_.~+=-]*)?' + // query string
-            '(\#[-a-z\d_]*)?$', 'i'); // fragment locater
+        var pattern = new RegExp('^((https?):\\/\\/)?([w|W]{3}\\.)+[a-zA-Z0-9\\-\\.]{3,}\\.[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})?$');
 
         if (!pattern.test(url)) {
             return message.reply("url inválida");
