@@ -150,9 +150,10 @@ bot.on("message", async message => {
 
         const nome = args[0];
         const url = args[1];
-
+        console.log(nome);
+        console.log(url);
         //regex para validar url
-        var pattern = new RegExp('^((https?):\\/\\/)?([w|W]{3}\\.)+[a-zA-Z0-9\\-\\.]{3,}\\.[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})?$');
+        var pattern = new RegExp('(https?:\\/\\/)?[\\w\\-~]+(\\.[\\w\\-~]+)+(\\/[\\w\\-~]*)*(#[\\w\\-]*)?(\\?.*)?');
 
         if (!pattern.test(url)) {
             return message.reply("url inválida");
