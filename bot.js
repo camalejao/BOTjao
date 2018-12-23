@@ -19,6 +19,9 @@ const soundboard = require("./soundboard.json");
 // lib para requisições http
 const request = require("request");
 
+// axios
+let axios = require('axios');
+
 
 bot.on("ready", () => {
     // roda se o bot iniciado e logado com sucesso
@@ -165,8 +168,32 @@ bot.on("message", async message => {
             }
         }
 
-        soundboard.sounds.push({"titulo":nome, "url":url});
+        soundboard.sounds.push({ "titulo": nome, "url": url });
         message.reply(nome + " adicionado");
+    }
+
+    if (command === "gado") {
+        const mensagem = `MUUUUUUUUUUUUU`;
+        
+        let key = process.env.PIXABAY_API_KEY;
+        let req = await axios.get('https://pixabay.com/api/?key='+ key + '&q=ox+cow&category=animals&image_type=photo&pretty=true');
+        let index = Math.floor(Math.random() * 20).toString();
+        let url = req.data.hits[index].webformatURL;
+
+        const imagem = { file: url };
+        message.channel.send(mensagem, imagem);
+    }
+
+    if (command === "cat") {
+        try {
+            let req = await axios.get('http://aws.random.cat/meow');
+            let url = req.data.file.replace('\\', 'g');
+            const imagem = { file: url };
+            message.channel.send('miau', imagem);
+        } catch (e) {
+            console.log(e);
+            message.channel.send('rip');
+        }
     }
 
 });
