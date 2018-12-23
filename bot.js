@@ -196,6 +196,20 @@ bot.on("message", async message => {
         }
     }
 
+    if (command === "carolina") {
+        var voiceChannel = message.member.voiceChannel;
+        if (!voiceChannel) {
+            return message.reply("você precisa estar em um canal de voz >:(");
+        }
+        voiceChannel.join().then(connection => {
+            const dispatcher = connection.playArbitraryInput('https://www.myinstants.com/media/sounds/carolina.mp3');
+            dispatcher.setVolume(1);
+            dispatcher.on("end", end => {
+                voiceChannel.leave();
+            });
+        }).catch(err => console.log(err));
+    }
+
 });
 
 
