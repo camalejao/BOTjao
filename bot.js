@@ -204,6 +204,17 @@ bot.on("message", async message => {
         }).catch(err => console.log(err));
     }
 
+    if (command === "sair") {
+        var voiceChannel = message.member.voiceChannel;
+        if (!voiceChannel) {
+            return message.reply("você precisa estar em um canal de voz >:(");
+        }
+        if(message.member.highestRole.hasPermission('MANAGE_CHANNELS'))
+            voiceChannel.leave();
+        else
+            return message.reply("você precisa estar em um canal de voz >:(");
+    }
+
 });
 
 
