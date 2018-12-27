@@ -212,7 +212,7 @@ bot.on("message", async message => {
         if(message.member.highestRole.hasPermission('MANAGE_CHANNELS'))
             voiceChannel.leave();
         else
-            return message.reply("você precisa estar em um canal de voz >:(");
+            return message.reply("você precisa de um cargo com permissão para fazer isso :p");
     }
 
 });
