@@ -143,9 +143,6 @@ bot.on("message", async message => {
         voiceChannel.join().then(connection => {
             const dispatcher = connection.playArbitraryInput(url);
             dispatcher.setVolume(1);
-            dispatcher.on("end", end => {
-                voiceChannel.leave();
-            });
         }).catch(err => console.log(err));
     }
 
@@ -204,9 +201,6 @@ bot.on("message", async message => {
         voiceChannel.join().then(connection => {
             const dispatcher = connection.playArbitraryInput('https://www.myinstants.com/media/sounds/carolina.mp3');
             dispatcher.setVolume(1);
-            dispatcher.on("end", end => {
-                voiceChannel.leave();
-            });
         }).catch(err => console.log(err));
     }
 
