@@ -215,6 +215,18 @@ bot.on("message", async message => {
             return message.reply("você precisa de um cargo com permissão para fazer isso :p");
     }
 
+    if (command === "hipersonico") {
+        var numero = Math.floor(Math.random() * 100 + 1).toString();
+        const mensagem = `<@${message.author.id}> está ` + numero + `% Hipersônico`;
+        message.channel.send(mensagem);
+    }
+
+    if (command === "safe") {
+        var numero = Math.floor(Math.random() * 100 + 1).toString();
+        const mensagem = `<@${message.author.id}> está ` + numero + `% Safe`;
+        message.channel.send(mensagem);
+    }
+
 });
 
 
