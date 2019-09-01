@@ -1,3 +1,7 @@
+const DataBase = require('./database');
+const db = new DataBase();
+const msgs = db.getMensagens();
+
 // carregando a lib do discord
 const Discord = require("discord.js");
 
@@ -13,15 +17,11 @@ const config = require("./config.json");
 // carregando o arquivo de mensagens
 const mensagens = require("./mensagens.json");
 
-// carregando o arquivo de soundboard
-const soundboard = require("./soundboard.json");
-
 // lib para requisições http
 const request = require("request");
 
 // axios
 let axios = require('axios');
-
 
 bot.on("ready", () => {
     // roda se o bot iniciado e logado com sucesso
@@ -82,9 +82,9 @@ bot.on("message", async message => {
 
     if (command === "oi") {
         // sorteia um número pseudoaleatório correspondente ao numero (de 1 a 10) de uma mensagem do arquivo de msgs
-        var numero = Math.floor(Math.random() * 10 + 1).toString();
+        var numero = Math.floor(Math.random() * 10 + 1);
         // constrói a mensagem e menciona o usuário que enviou o comando
-        const mensagem = mensagens[numero] + `<@${message.author.id}>`;
+        const mensagem = msgs[numero] + ` <@${message.author.id}>`;
         message.channel.send(mensagem);
     }
 
@@ -107,41 +107,40 @@ bot.on("message", async message => {
     }
 
     if (command === "soundboard") {
-        var mensagem = "```Sound effects disponíveis:\n\n";
+        let mensagem = "```Sound effects disponíveis:\n\n";
 
-        for (var i = 0; i < soundboard.sounds.length; i++) {
-            mensagem += soundboard.sounds[i].titulo + "\n";
-        }
+        await db.getSoundBoard(message.guild.id)
+            .then((sounds) => {
+                sounds.forEach((sound) => {
+                    mensagem += sound.titulo + '\n';
+                });
+            });
 
         mensagem += "\nPara dar play, use: jao!sound nomedosoundeffect\n```";
         message.channel.send(mensagem);
     }
 
     if (command === "sound") {
-
+        console.log(new Date());
         const arg = args.join("");
-        var url;
 
         if (arg === undefined) {
             return message.reply("soundeffect não encontrado :(");
         }
 
-        for (var i = 0; i < soundboard.sounds.length; i++) {
-            if (arg === soundboard.sounds[i].titulo) {
-                url = soundboard.sounds[i].url;
-            }
-        }
+        const url = await db.getSound(message.guild.id, arg)
 
         if (url === undefined) {
             return message.reply("soundeffect não encontrado :(");
         }
 
-        var voiceChannel = message.member.voiceChannel;
+        const voiceChannel = message.member.voiceChannel;
         if (!voiceChannel) {
             return message.reply("você precisa estar em um canal de voz >:(");
         }
         voiceChannel.join().then(connection => {
             const dispatcher = connection.playArbitraryInput(url);
+            console.log(new Date());
             dispatcher.setVolume(1);
         }).catch(err => console.log(err));
     }
@@ -159,26 +158,29 @@ bot.on("message", async message => {
             return message.reply("url inválida");
         }
 
-        for (var i = 0; i < soundboard.sounds.length; i++) {
-            if (nome === soundboard.sounds[i].titulo) {
-                return message.reply("sound effect já existente, escolha outro nome");
-            }
-        }
+        let result = await db.addSound(message.guild.id, nome, url);
 
-        soundboard.sounds.push({ "titulo": nome, "url": url });
-        message.reply(nome + " adicionado");
+        if(result)
+            message.reply(nome + " adicionado");
+        else
+            message.reply("erro");
     }
 
     if (command === "gado") {
-        const mensagem = `MUUUUUUUUUUUUU`;
-        
-        let key = process.env.PIXABAY_API_KEY;
-        let req = await axios.get('https://pixabay.com/api/?key='+ key + '&q=ox+cow&category=animals&image_type=photo&pretty=true');
-        let index = Math.floor(Math.random() * 20).toString();
-        let url = req.data.hits[index].webformatURL;
+        try {
+            const mensagem = `MUUUUUUUUUUUUU`;
+            let key = process.env.PIXABAY_API_KEY;
+            let req = await axios.get('https://pixabay.com/api/?key=' + key
+                + '&q=ox+cow&category=animals&image_type=photo&pretty=true');
+            let index = Math.floor(Math.random() * 20).toString();
+            let url = req.data.hits[index].webformatURL;
 
-        const imagem = { file: url };
-        message.channel.send(mensagem, imagem);
+            const imagem = { file: url };
+            message.channel.send(mensagem, imagem);
+        } catch (err) {
+            console.log(err);
+            message.channel.send('rip');
+        }
     }
 
     if (command === "cat") {
@@ -209,7 +211,7 @@ bot.on("message", async message => {
         if (!voiceChannel) {
             return message.reply("você precisa estar em um canal de voz >:(");
         }
-        if(message.member.highestRole.hasPermission('MANAGE_CHANNELS'))
+        if (message.member.highestRole.hasPermission('MANAGE_CHANNELS'))
             voiceChannel.leave();
         else
             return message.reply("você precisa de um cargo com permissão para fazer isso :p");
