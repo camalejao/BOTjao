@@ -6,6 +6,7 @@
     "author": "João Falcão",
     "dependencies": {
         "discord.js": "^11.5.1",
+        "ytdl-core": "^1.0.5",
         "discord.js-musicbot-addon": "^13.8.1",
         "axios": "^0.19.0",
         "node-opus": "^0.3.3",
