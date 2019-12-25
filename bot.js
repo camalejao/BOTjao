@@ -2,26 +2,20 @@ const DataBase = require('./database');
 const db = new DataBase();
 const msgs = db.getMensagens();
 
-// carregando a lib do discord
+// Discord.js lib
 const Discord = require("discord.js");
 
-// carregando a lib de música
-const Music = require('discord.js-musicbot-addon');
-
-// como "se referir" ao bot
+// bot client object
 const bot = new Discord.Client();
 
-// carregando o arquivo com a configuração (prefix)
-const config = require("./config.json");
+// music module in bot client object
+bot.music = require('discord.js-musicbot-addon');
 
-// carregando o arquivo de mensagens
+const config = require("./config.json");
 const mensagens = require("./mensagens.json");
 
-// lib para requisições http
-const request = require("request");
-
 // axios
-let axios = require('axios');
+const axios = require('axios');
 
 bot.on("ready", () => {
     // roda se o bot iniciado e logado com sucesso
@@ -233,18 +227,19 @@ bot.on("message", async message => {
 
 
 // configura addon de música
-Music.start(bot, {
-    prefix: config.prefix,                                      // Prefixo dos comandos
-    global: false,                                              // queues espesificas para cada server
-    youtubeKey: process.env.YT_API_KEY,                         // chave da API do YouTube
-    maxQueueSize: 15,                                           // limita a queue em 15
-    enableQueueStat: true,                                      // indicador playing/paused
-    clearInvoker: true,                                         // apaga a mensagem de quem enviou o comando
-    helpCmd: 'musica',                                          // nome para o comando 'help'
-    playCmd: 'play',                                            // nome para o comando 'play'
-    volumeCmd: 'adjust',                                        // nome para o comando 'volume'
-    leaveCmd: 'quit',                                           // nome para o comando 'leave'
-    disableLoop: true                                           // desativa o comando loop
+bot.music.start(bot, {
+    youtubeKey: process.env.YT_API_KEY,
+    botPrefix: config.prefix,
+    maxQueueSize: 25,
+    help: {
+        enabled: true,
+        alt: ["musica"],
+        name: "musica"
+    },
+    leave: {
+        enabled: true,
+        alt: ["quit"],
+    }
 });
 
 bot.login(process.env.BOT_TOKEN);
