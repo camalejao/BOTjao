@@ -8,13 +8,10 @@
         "heroku-postbuild": "cp -r ./node_modules/m3u8stream/dist ./node_modules/m3u8stream/lib"
     },
     "dependencies": {
-        "discord.js": "^11.5.1",
-        "ytdl-core": "^1.0.5",
-        "discord.js-musicbot-addon": "^13.8.1",
-        "axios": "^0.19.0",
-        "node-opus": "^0.3.3",
-        "opusscript": "0.0.7",
-        "firebase": "^7.6.1",
-        "request": "^2.88.0"
+        "discord.js": "^12.2.0",
+        "@discordjs/opus": "^0.2.1",
+        "ytdl-core": "^2.1.1",
+        "axios": "^0.19.2",
+        "firebase": "^7.13.2"
     }
 }

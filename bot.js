@@ -8,18 +8,15 @@ const Discord = require("discord.js");
 // bot client object
 const bot = new Discord.Client();
 
-// music module in bot client object
-bot.music = require('discord.js-musicbot-addon');
-
 const config = require("./config.json");
 const mensagens = require("./mensagens.json");
 
 // axios
 const axios = require('axios');
 
-bot.on("ready", () => {
+bot.once("ready", () => {
     // roda se o bot iniciado e logado com sucesso
-    console.log(`Bot has started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} guilds.`);
+    console.log(`Bot has started, with ${bot.users.cache.size} users, in ${bot.channels.cache.size} channels of ${bot.guilds.cache.size} guilds.`);
     // muda o status de "jogando" do bot
     bot.user.setActivity('diga jao!help');
 });
@@ -71,7 +68,7 @@ bot.on("message", async message => {
         // Calculates ping between sending a message and editing it, giving a nice round-trip latency.
         // The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
         const m = await message.channel.send("Ping?");
-        m.edit(`Pong! Latência de ${m.createdTimestamp - message.createdTimestamp}ms. Latência da API: ${Math.round(bot.ping)}ms`);
+        m.edit(`Pong! Latência de ${m.createdTimestamp - message.createdTimestamp}ms. Latência da API: ${Math.round(bot.ws.ping)}ms`);
     }
 
     if (command === "oi") {
@@ -128,12 +125,12 @@ bot.on("message", async message => {
             return message.reply("soundeffect não encontrado :(");
         }
 
-        const voiceChannel = message.member.voiceChannel;
+        const voiceChannel = message.member.voice.channel;
         if (!voiceChannel) {
             return message.reply("você precisa estar em um canal de voz >:(");
         }
         voiceChannel.join().then(connection => {
-            const dispatcher = connection.playArbitraryInput(url);
+            const dispatcher = connection.play(url);
             console.log(new Date());
             dispatcher.setVolume(1);
         }).catch(err => console.log(err));
@@ -169,8 +166,8 @@ bot.on("message", async message => {
             let index = Math.floor(Math.random() * 20).toString();
             let url = req.data.hits[index].webformatURL;
 
-            const imagem = { file: url };
-            message.channel.send(mensagem, imagem);
+            const imagem = [ url ];
+            message.channel.send(mensagem, { files: imagem });
         } catch (err) {
             console.log(err);
             message.channel.send('rip');
@@ -181,8 +178,8 @@ bot.on("message", async message => {
         try {
             let req = await axios.get('http://aws.random.cat/meow');
             let url = req.data.file.replace('\\', 'g');
-            const imagem = { file: url };
-            message.channel.send('miau', imagem);
+            const imagem = [ url ];
+            message.channel.send('miau', { files: imagem });
         } catch (e) {
             console.log(e);
             message.channel.send('rip');
@@ -190,22 +187,22 @@ bot.on("message", async message => {
     }
 
     if (command === "carolina") {
-        var voiceChannel = message.member.voiceChannel;
+        var voiceChannel = message.member.voice.channel;
         if (!voiceChannel) {
             return message.reply("você precisa estar em um canal de voz >:(");
         }
         voiceChannel.join().then(connection => {
-            const dispatcher = connection.playArbitraryInput('https://www.myinstants.com/media/sounds/carolina.mp3');
+            const dispatcher = connection.play('https://www.myinstants.com/media/sounds/carolina.mp3');
             dispatcher.setVolume(1);
         }).catch(err => console.log(err));
     }
 
     if (command === "sair") {
-        var voiceChannel = message.member.voiceChannel;
+        var voiceChannel = message.member.voice.channel;
         if (!voiceChannel) {
             return message.reply("você precisa estar em um canal de voz >:(");
         }
-        if (message.member.highestRole.hasPermission('MANAGE_CHANNELS'))
+        if (message.member.hasPermission('MANAGE_CHANNELS'))
             voiceChannel.leave();
         else
             return message.reply("você precisa de um cargo com permissão para fazer isso :p");
@@ -223,23 +220,6 @@ bot.on("message", async message => {
         message.channel.send(mensagem);
     }
 
-});
-
-
-// configura addon de música
-bot.music.start(bot, {
-    youtubeKey: process.env.YT_API_KEY,
-    botPrefix: config.prefix,
-    maxQueueSize: 25,
-    help: {
-        enabled: true,
-        alt: ["musica"],
-        name: "musica"
-    },
-    leave: {
-        enabled: true,
-        alt: ["quit"],
-    }
 });
 
 bot.login(process.env.BOT_TOKEN);
