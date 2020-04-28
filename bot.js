@@ -75,7 +75,7 @@ bot.on("message", async message => {
         if (command.msgs) options.msgs = msgs;
         if (command.websocket) options.ws = bot.ws;
         if (command.database) options.db = db;
-        if (command.mention) options.user = util.getUserFromMention(args[0]);
+        if (command.mention) options.user = util.getUserFromMention(args[0], bot);
 
         command.execute(message, options);
         

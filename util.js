@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = {
-    getUserFromMention(mention) {
+    getUserFromMention(mention, bot) {
         if (!mention) return;
 
         if (mention.startsWith('<@') && mention.endsWith('>')) {
