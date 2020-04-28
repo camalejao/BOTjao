@@ -3,6 +3,7 @@ const { prefix } = require("./config.json");
 // const msgs = require("./mensagens.json");
 
 const axios = require('axios');
+const util = require('./util.js')
 
 const DataBase = require('./database');
 const db = new DataBase();
@@ -22,20 +23,6 @@ for (const file of commandFiles) {
 for (const file of soundboardFiles) {
 	const sbCommand = require(`./soundboard/${file}`);
 	bot.commands.set(sbCommand.name, sbCommand);
-}
-
-function getUserFromMention(mention) {
-	if (!mention) return;
-
-	if (mention.startsWith('<@') && mention.endsWith('>')) {
-		mention = mention.slice(2, -1);
-
-		if (mention.startsWith('!')) {
-			mention = mention.slice(1);
-		}
-
-		return bot.users.cache.get(mention);
-	}
 }
 
 bot.once("ready", () => {
@@ -88,7 +75,7 @@ bot.on("message", async message => {
         if (command.msgs) options.msgs = msgs;
         if (command.websocket) options.ws = bot.ws;
         if (command.database) options.db = db;
-        if (command.mention) options.user = getUserFromMention(args[0]);
+        if (command.mention) options.user = util.getUserFromMention(args[0]);
 
         command.execute(message, options);
         
