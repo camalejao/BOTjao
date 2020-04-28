@@ -4,6 +4,7 @@ module.exports = {
     name: 'animeme',
     aliases: ['animemes'],
     description: 'Pega um meme do subreddit /r/Animemes',
+    category: 'images',
     async execute(message) {
         const redditUrl = 'https://www.reddit.com/r/animemes/top/.json';
         const imgUrl = await util.getImageFromSubreddit(redditUrl);

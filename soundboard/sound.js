@@ -6,6 +6,7 @@ module.exports = {
     args: true,
     voice: true,
     guildOnly: true,
+    category: 'soundboard',
     async execute(message, options) {
         const db = options.db;
         let args = options.args;

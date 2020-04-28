@@ -3,6 +3,7 @@ module.exports = {
     description: 'Lista os sound effects disponíveis na soundboard do servidor',
     database: true,
     guildOnly: true,
+    category: 'soundboard',
     async execute(message, options) {
         const db = options.db;
 

@@ -3,6 +3,7 @@ module.exports = {
     description: 'Mostra quantos % safe você (ou quem vc mencionar) está no momento',
     usage: '[menção opcional a um usuario]',
     mention: true,
+    category: 'general',
     execute(message, options) {
         const user = options.user;
         let msg;

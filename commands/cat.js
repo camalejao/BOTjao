@@ -4,6 +4,7 @@ module.exports = {
     name: 'cat',
     aliases: ['miau', 'gato'],
     description: 'Envia uma imagem de gatinho',
+    category: 'images',
     async execute(message) {
         try {
             let req = await axios.get('http://aws.random.cat/meow');

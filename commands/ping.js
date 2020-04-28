@@ -2,6 +2,7 @@ module.exports = {
     name: 'ping',
     description: 'Pong! E também mostra a latência',
     websocket: true,
+    category: 'general',
     async execute(message, options) {
         const ws = options.ws;
         const m = await message.channel.send("Ping?");

@@ -4,6 +4,7 @@ module.exports = {
     name: 'gado',
     aliases: ['mu'],
     description: 'Envia a imagem de um gadão',
+    category: 'images',
     async execute(message) {
         try {
             let key = process.env.PIXABAY_API_KEY;

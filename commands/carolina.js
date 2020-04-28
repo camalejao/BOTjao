@@ -4,6 +4,7 @@ module.exports = {
     description: 'Risada? Golfinho? Invocação de demônios? Não sei',
     voice: true,
     guildOnly: true,
+    category: 'soundboard',
     execute(message) {
         message.member.voice.channel.join()
             .then(connection => {

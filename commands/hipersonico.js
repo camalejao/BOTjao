@@ -3,6 +3,7 @@ module.exports = {
     description: 'Mostra o seu nível (ou de quem vc mencionar) de hipersônico no momento',
     usage: '[menção opcional a um usuario]',
     mention: true,
+    category: 'general',
     execute(message, options) {
         const user = options.user;
         let msg;
