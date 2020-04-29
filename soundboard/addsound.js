@@ -1,7 +1,7 @@
 module.exports = {
     name: 'addsound',
     description: 'Adiciona um áudio na soundboard do servidor',
-    usage: '<nome do sound effect> <url de alguma mídia de áudio>',
+    usage: '[nome do sound effect] [url de alguma mídia de áudio]',
     args: true,
     database: true,
     guildOnly: true,

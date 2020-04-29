@@ -71,7 +71,7 @@ bot.on("message", async message => {
 
     try {
         let options = {};
-        if (command.args) options.args = args;
+        if (command.args || command.optArgs) options.args = args;
         if (command.msgs) options.msgs = msgs;
         if (command.websocket) options.ws = bot.ws;
         if (command.database) options.db = db;

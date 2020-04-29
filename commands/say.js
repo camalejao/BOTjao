@@ -2,7 +2,7 @@ module.exports = {
     name: 'say',
     args: true,
     description: 'Digite uma mensagem e o BOTjão vai mandar ela no chat',
-    usage: '<mensagem em texto>',
+    usage: '[mensagem em texto]',
     category: 'general',
     execute(message, options) {
         let args = options.args;

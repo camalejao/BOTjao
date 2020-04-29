@@ -1,7 +1,7 @@
 module.exports = {
     name: 'sound',
     description: 'Toca um áudio da soundboard',
-    usage: '<nome do sound effect>',
+    usage: '[nome do sound effect]',
     database: true,
     args: true,
     voice: true,
