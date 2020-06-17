@@ -1,15 +1,14 @@
 const fs = require('fs');
-const { prefix } = require("./config.json");
-// const msgs = require("./mensagens.json");
+const { prefix } = require('./config.json');
 
 const axios = require('axios');
-const util = require('./util.js')
+const util = require('./util.js');
+const msgs = util.messages;
 
 const DataBase = require('./database');
 const db = new DataBase();
-const msgs = db.getMensagens();
 
-const Discord = require("discord.js");
+const Discord = require('discord.js');
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
 

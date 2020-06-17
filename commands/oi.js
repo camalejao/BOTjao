@@ -6,7 +6,7 @@ module.exports = {
     category: 'general',
     execute(message, options) {
         const msgs = options.msgs;
-        let idx = Math.floor(Math.random() * 9);
+        let idx = Math.floor(Math.random() * msgs.length);
         const m = msgs[idx] + ` <@${message.author.id}>`;
         message.channel.send(m);
     }

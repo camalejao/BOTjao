@@ -1,6 +1,20 @@
 const axios = require('axios');
 
 module.exports = {
+    messages: [
+        "salve ",
+        "fala, meu consagrado ",
+        "eae chegado ",
+        "fala tu ",
+        "opa meu suprassumo ",
+        "fala ae meu inexorável ",
+        "diz ae doidjo ",
+        "opa meu patrão ",
+        "oi bb ",
+        "relou mai frend ",
+        "coé "
+    ],
+
     getUserFromMention(mention, bot) {
         if (!mention) return;
 
@@ -14,6 +28,7 @@ module.exports = {
             return bot.users.cache.get(mention);
         }
     },
+
     async getImageFromSubreddit(url) {
         let imgUrl;
         await axios.get(url)
