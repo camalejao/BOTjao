@@ -5,8 +5,7 @@ const axios = require('axios');
 const util = require('./util.js');
 const msgs = util.messages;
 
-const DataBase = require('./database');
-const db = new DataBase();
+const database = require('./database');
 
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -30,10 +29,12 @@ bot.once("ready", () => {
 });
 
 bot.on("guildCreate", guild => {
+    database.joinGuild(guild.id);
     console.log(`Adicionado a novo server: ${guild.name} (id: ${guild.id}), com ${guild.memberCount} membros`);
 });
 
 bot.on("guildDelete", guild => {
+    database.leaveGuild(guild.id);
     console.log(`Removido do server: ${guild.name} (id: ${guild.id})`);
 });
 
@@ -73,7 +74,7 @@ bot.on("message", async message => {
         if (command.args || command.optArgs) options.args = args;
         if (command.msgs) options.msgs = msgs;
         if (command.websocket) options.ws = bot.ws;
-        if (command.database) options.db = db;
+        if (command.database) options.db = database;
         if (command.mention) options.user = util.getUserFromMention(args[0], bot);
 
         command.execute(message, options);
@@ -84,4 +85,7 @@ bot.on("message", async message => {
 	}
 });
 
-bot.login(process.env.BOT_TOKEN);
+database.connect((err) => {
+    if(err) console.log(err);
+    bot.login(process.env.BOT_TOKEN);
+});
