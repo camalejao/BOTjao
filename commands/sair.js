@@ -5,7 +5,9 @@ module.exports = {
     guildOnly: true,
     permissions: ['MANAGE_CHANNELS'],
     category: 'soundboard',
-    execute(message) {
+    music: true,
+    execute(message, options) {
         message.member.voice.channel.leave();
+        options.queue.clearQueue(message.guild.id);
     }
 }

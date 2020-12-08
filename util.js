@@ -1,4 +1,5 @@
 const axios = require('axios');
+const querystring = require('querystring');
 
 module.exports = {
     messages: [
@@ -46,5 +47,37 @@ module.exports = {
                 imgUrl = false;
             });
         return imgUrl;
-    }
+    },
+    
+    shuffleArray(arr) {
+        arr.sort(() => Math.random() - 0.5)
+    },
+
+    async getSpotifyToken() {
+        const base64 = Buffer.from(process.env.SPOTIFY_CLIENT + ':'
+            + process.env.CLIENT_SECRET).toString('base64');
+        try {
+            let res = await axios({
+                method: 'post',
+                url: 'https://accounts.spotify.com/api/token',
+                headers: {'Authorization': `Basic ${base64}`},
+                data: querystring.stringify({grant_type: 'client_credentials'})
+            });
+            return res.data.access_token;
+        } catch (err) {
+            console.error(err);
+        }
+    },
+
+    async getSpotifyPlaylistTracks(playlistId, token) {
+        try {
+            let res = await axios.get('https://api.spotify.com/v1/playlists/' + playlistId +
+                '/tracks?fields=items(track(name, artists(name)))',
+                {headers: {'Authorization': `Bearer ${token}`}});
+            return res.data.items;
+        } catch (err) {
+            console.error(err);
+        }
+    },
+    
 }

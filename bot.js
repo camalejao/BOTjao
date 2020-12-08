@@ -1,9 +1,12 @@
+const Q = require('./queue.js');
 const fs = require('fs');
 const { prefix } = require('./config.json');
 
 const axios = require('axios');
 const util = require('./util.js');
 const msgs = util.messages;
+
+const queue = new Q();
 
 const database = require('./database');
 
@@ -13,6 +16,7 @@ bot.commands = new Discord.Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const soundboardFiles = fs.readdirSync('./soundboard').filter(file => file.endsWith('.js'));
+const musicFiles = fs.readdirSync('./music').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
@@ -20,6 +24,10 @@ for (const file of commandFiles) {
 }
 for (const file of soundboardFiles) {
 	const sbCommand = require(`./soundboard/${file}`);
+	bot.commands.set(sbCommand.name, sbCommand);
+}
+for (const file of musicFiles) {
+	const sbCommand = require(`./music/${file}`);
 	bot.commands.set(sbCommand.name, sbCommand);
 }
 
@@ -76,6 +84,7 @@ bot.on("message", async message => {
         if (command.websocket) options.ws = bot.ws;
         if (command.database) options.db = database;
         if (command.mention) options.user = util.getUserFromMention(args[0], bot);
+        if (command.music) options.queue = queue;
 
         command.execute(message, options);
         

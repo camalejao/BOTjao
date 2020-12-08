@@ -63,6 +63,11 @@ module.exports = {
             commands.filter(cmd => cmd.category === 'general')
                 .each(cmd => cmds += '`'+cmd.name+'` ');
             fields.push({ name: 'Uso Geral', value: cmds });
+
+            cmds = '';
+            commands.filter(cmd => cmd.category === 'music')
+                .each(cmd => cmds += '`'+cmd.name+'` ');
+            fields.push({ name: 'Música', value: cmds });
             
             embed.fields = fields;
     
