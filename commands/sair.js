@@ -3,7 +3,6 @@ module.exports = {
     description: 'Faz o BOTjão sair do canal de voz',
     voice: true,
     guildOnly: true,
-    permissions: ['MANAGE_CHANNELS'],
     category: 'soundboard',
     music: true,
     execute(message, options) {

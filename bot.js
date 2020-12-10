@@ -94,6 +94,20 @@ bot.on("message", async message => {
 	}
 });
 
+/*
+    Executa a cada intervalo de 5 minutos.
+    Para cada conexão de voz, checa a quantidade de membros no canal.
+    Se a quantidade de membros (não bots) for 0, disconecta.
+*/
+bot.setInterval(() => {
+    bot.voice.connections.each(con => {
+        if(con.channel.members.filter(m => m.user.bot === false).size === 0) {
+            con.channel.leave();
+            queue.clearQueue(con.channel.guild.id);
+        }
+    });
+}, 300000, bot);
+
 database.connect((err) => {
     if(err) console.log(err);
     bot.login(process.env.BOT_TOKEN);
