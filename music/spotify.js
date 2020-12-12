@@ -1,6 +1,4 @@
 const util = require('../util.js');
-const axios = require('axios');
-const ytdl = require('ytdl-core');
 const ytsr = require('ytsr');
 
 module.exports = {
@@ -32,6 +30,7 @@ module.exports = {
 
         //const gq = options.queue.getQueue(message.guild.id);
 
+        let count = 0;
         await Promise.all(queries.map(async (query) => {
             console.log(query)
             try {
@@ -43,8 +42,10 @@ module.exports = {
                     song = {title: r.items[0].title, url: r.items[0].link}
                     options.queue.addToQueue(message.guild.id, song);
                 }
+                count += 1;
             } catch(err) { console.log(err) }
         }));
+        message.channel.send(count + ' músicas adicionadas à fila');
 
         const con = await message.member.voice.channel.join();
         options.queue.boundConnection(con, message.channel, message.guild.id);

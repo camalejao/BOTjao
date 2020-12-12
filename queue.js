@@ -29,7 +29,7 @@ class Queue {
 
     play(guildId, skip) {
         let gq = this.getQueue(guildId);
-        console.log(gq.songs);
+        //console.log(gq.songs);
         if(gq.dispatcher.paused) {
             gq.dispatcher.resume();
         } else if(skip || !this.isPlaying(guildId)) {
