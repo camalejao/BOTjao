@@ -29,17 +29,19 @@ class Queue {
 
     play(guildId, skip) {
         let gq = this.getQueue(guildId);
-        //console.log(gq.songs);
         if(gq.dispatcher.paused) {
             gq.dispatcher.resume();
         } else if(skip || !this.isPlaying(guildId)) {
             if(gq.songs.length) {
                 let song = gq.songs.shift();
-                gq.dispatcher = gq.connection.play(ytdl(song.url));
+                gq.dispatcher = gq.connection.play(ytdl(song.url, {filter: 'audioonly'}));
                 gq.dispatcher.setVolume(1);
                 gq.dispatcher.on('start', () => {gq.channel.send('Tocando ' + song.title)})
                 gq.dispatcher.on('finish', () => {this.play(guildId, true)});
                 gq.dispatcher.on('error', () => {this.play(guildId, true)});
+            } else {
+                gq.dispatcher.destroy();
+                gq.dispatcher = {};
             }
         }
     }
@@ -54,7 +56,6 @@ class Queue {
     }
 
     resume(guildId) {
-        console.log('PLS')
         let gq = this.getQueue(guildId);
         try {
             if(gq.dispatcher.paused){

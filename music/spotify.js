@@ -17,8 +17,8 @@ module.exports = {
         const token = await util.getSpotifyToken();
         
         const tracks = await util.getSpotifyPlaylistTracks(playlistId, token);
-        console.log(token)
-        console.log(tracks)
+        // console.log(token)
+        // console.log(tracks)
 
         const queries = [];
         tracks.forEach(t => {
@@ -27,8 +27,6 @@ module.exports = {
             queries.push(string);
         });
         util.shuffleArray(queries);
-
-        //const gq = options.queue.getQueue(message.guild.id);
 
         let count = 0;
         await Promise.all(queries.map(async (query) => {
