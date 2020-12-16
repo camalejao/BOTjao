@@ -12,7 +12,7 @@
         "axios": "^0.19.2",
         "discord.js": "^12.2.0",
         "mongodb": "^3.5.9",
-        "ytdl-core": "^4.1.4",
+        "ytdl-core": "^4.1.6",
         "ytsr": "^2.0.0-alpha.4"
     }
 }
