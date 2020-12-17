@@ -12,13 +12,14 @@ module.exports = {
     category: 'music',
     async execute(message, options) {
         let args = options.args;
-        const playlistId = args.join("").split("/").pop();
+        let playlistId = args.join("").split("/").pop();
+
+        if (playlistId.includes('?')) {
+            playlistId = playlistId.split('?')[0];
+        }
 
         const token = await util.getSpotifyToken();
-        
         const tracks = await util.getSpotifyPlaylistTracks(playlistId, token);
-        // console.log(token)
-        // console.log(tracks)
 
         const queries = [];
         tracks.forEach(t => {
@@ -28,26 +29,43 @@ module.exports = {
         });
         util.shuffleArray(queries);
 
-        let count = 0;
+        /*
+            too many async/await and promises and callbacks and try/catches
+            oh ffs i just dont want it to crash for some dumb reason
+            (which is obviously my fault)
+        */
+        let count = 0, errors = 0;
         await Promise.all(queries.map(async (query) => {
-            console.log(query)
             try {
-                const r = await ytsr(query, {limit: 1});
-                if(r.items[1]) {
-                    song = {title: r.items[1].title, url: r.items[1].link}
-                    options.queue.addToQueue(message.guild.id, song);
-                } else {
-                    song = {title: r.items[0].title, url: r.items[0].link}
-                    options.queue.addToQueue(message.guild.id, song);
-                }
-                count += 1;
-            } catch(err) { console.log(err) }
-        }));
-        message.channel.send(count + ' músicas adicionadas à fila');
+                await ytsr(query, {gl: 'BR', hl: 'pt', limit: 1})
+                    .then(r => {
+                        let items = r.items.filter(i => i.type === 'video');
+                        let song = {
+                            title: items[0].title, 
+                            url: items[0].link
+                        };
+                        options.queue.addToQueue(message.guild.id, song);
+                        count += 1;
+                    }).catch(err => {
+                        console.log(err);
+                        errors += 1;
+                    });
 
-        const con = await message.member.voice.channel.join();
-        options.queue.boundConnection(con, message.channel, message.guild.id);
-        options.queue.play(message.guild.id, false);
+            } catch(err) { console.log(err + '\nquem causou: ' + query); }
+        }));
+
+        message.channel.send(`${count} músicas adicionadas à fila`);
+        if(errors > 0) {
+            let msg = `Ocorreu erro em ${errors} caso(s) :(`;
+            message.channel.send(msg);
+        }
+
+        await message.member.voice.channel.join()
+            .then(con => {
+                options.queue.boundConnection(con,
+                    message.channel, message.guild.id);
+                options.queue.play(message.guild.id, false);
+            });
     },
 
 }

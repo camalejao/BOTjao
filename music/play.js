@@ -17,31 +17,42 @@ module.exports = {
         let url = options.args[0];
         let query = options.args.join(' ');
 
-        let song = {};
+        let song = {}, error = 0;
 
         if (ytdl.validateURL(url)) {
-            const r = await ytdl.getBasicInfo(url);
-            
-            song.title = r.videoDetails.title;
-            song.url = r.videoDetails.video_url;
+            await ytdl.getBasicInfo(url)
+                .then(r => {
+                    song.title = r.videoDetails.title;
+                    song.url = r.videoDetails.video_url;
+                }).catch(err => {
+                    console.log(err);
+                    error += 1;
+                });
         } else {
             try {
-                const r = await ytsr(query, {limit: 1});
-                if (r.items[1]) {
-                    song.title = r.items[1].title;
-                    song.url = r.items[1].link;
-                } else {
-                    song.title = r.items[0].title;
-                    song.url = r.items[0].link;
-                }
+                await ytsr(query, {gl: 'BR', hl: 'pt', limit: 1})
+                    .then(r => {
+                        let items = r.items.filter(i => i.type === 'video');
+                        song.title = items[0].title;
+                        song.url = items[0].link;
+                    }).catch(err => {
+                        console.log(err);
+                        error += 1;
+                    });
             } catch (err) { console.log(err) }
         }
         
-        options.queue.addToQueue(message.guild.id, song);
-        message.channel.send(song.title + ' adicionada à fila');
-
-        const con = await message.member.voice.channel.join();
-        options.queue.boundConnection(con, message.channel, message.guild.id);
-        options.queue.play(message.guild.id, false);
+        if (!error) {
+            options.queue.addToQueue(message.guild.id, song);
+            message.channel.send(song.title + ' adicionada à fila');
+            await message.member.voice.channel.join()
+                .then(con => {
+                    options.queue.boundConnection(con,
+                        message.channel, message.guild.id);
+                    options.queue.play(message.guild.id, false);
+                });
+        } else {
+            message.channel.send('deu erro :c');
+        }
     }
 }
