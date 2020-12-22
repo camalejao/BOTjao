@@ -1,4 +1,4 @@
-const ytdl = require('ytdl-core');
+const ytdl = require('ytdl-core-discord');
 
 class Queue {
     constructor() {
@@ -27,7 +27,7 @@ class Queue {
         this.guildQueue.set(guildId, gq);
     }
 
-    play(guildId, skip) {
+    async play(guildId, skip) {
         let gq = this.getQueue(guildId);
         if(gq.dispatcher.paused) {
             gq.dispatcher.resume();
@@ -35,18 +35,25 @@ class Queue {
             if(gq.songs.length) {
                 let song = gq.songs.shift();
                 try {
-                    gq.dispatcher = gq.connection.play(ytdl(song.url, {filter: 'audioonly'}));
-                    gq.dispatcher.setVolume(1);
+                    gq.dispatcher = gq.connection.play(
+                        await ytdl(song.url, {filter: 'audioonly'}),
+                        {type: 'opus'}
+                    );
+                    //gq.dispatcher.setVolume(1);
                     gq.dispatcher.on('start', () => {
                         console.log(`Playing ${song.title}`);
                         gq.channel.send('Tocando ' + song.title);
                     });
                     gq.dispatcher.on('finish', () => {
                         console.log(`Finished ${song.title}`);
+                        gq.dispatcher.destroy();
                         this.play(guildId, true);
                     });
                     gq.dispatcher.on('error', () => {
                         console.log(`Error on ${song.title}`);
+                        console.log(gq.dispatcher);
+                        gq.dispatcher.destroy();
+                        console.log(song);
                         this.play(guildId, true);
                     });
                 } catch (err) {

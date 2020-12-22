@@ -1,6 +1,6 @@
 const util = require('../util.js');
 const ytsr = require('ytsr');
-const ytdl = require('ytdl-core');
+const ytdl = require('ytdl-core-discord');
 
 module.exports = {
     name: 'play',

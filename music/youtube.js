@@ -1,6 +1,6 @@
 const util = require('../util.js');
 const axios = require('axios');
-const ytdl = require('ytdl-core');
+const ytdl = require('ytdl-core-discord');
 
 module.exports = {
     name: 'youtube',
