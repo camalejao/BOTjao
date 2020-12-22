@@ -37,9 +37,18 @@ class Queue {
                 try {
                     gq.dispatcher = gq.connection.play(ytdl(song.url, {filter: 'audioonly'}));
                     gq.dispatcher.setVolume(1);
-                    gq.dispatcher.on('start', () => {gq.channel.send('Tocando ' + song.title)});
-                    gq.dispatcher.on('finish', () => {this.play(guildId, true)});
-                    gq.dispatcher.on('error', () => {this.play(guildId, true)});
+                    gq.dispatcher.on('start', () => {
+                        console.log(`Playing ${song.title}`);
+                        gq.channel.send('Tocando ' + song.title);
+                    });
+                    gq.dispatcher.on('finish', () => {
+                        console.log(`Finished ${song.title}`);
+                        this.play(guildId, true);
+                    });
+                    gq.dispatcher.on('error', () => {
+                        console.log(`Error on ${song.title}`);
+                        this.play(guildId, true);
+                    });
                 } catch (err) {
                     console.log(err);
                     this.play(guildId, true);
