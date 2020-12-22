@@ -33,7 +33,7 @@ for (const file of musicFiles) {
 
 bot.once("ready", () => {
     console.log(`Bot iniciado: ${bot.users.cache.size} users, ${bot.channels.cache.size} canais, ${bot.guilds.cache.size} servers.`);
-    bot.user.setActivity('diga jao!help');
+    bot.user.setActivity(`${prefix}help`);
 });
 
 bot.on("guildCreate", guild => {

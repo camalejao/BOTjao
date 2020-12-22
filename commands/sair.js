@@ -1,5 +1,6 @@
 module.exports = {
     name: 'sair',
+    aliases: ['quit', 'leave'],
     description: 'Faz o BOTjão sair do canal de voz',
     voice: true,
     guildOnly: true,

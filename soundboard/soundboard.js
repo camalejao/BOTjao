@@ -2,6 +2,7 @@ const { prefix } = require('../config.json');
 
 module.exports = {
     name: 'soundboard',
+    aliases: ['sb'],
     description: 'Lista os sound effects disponíveis na soundboard do servidor',
     database: true,
     guildOnly: true,
