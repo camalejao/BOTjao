@@ -52,19 +52,21 @@ module.exports = {
             } catch(err) { console.log(err); }
         }));
 
-        message.channel.send(`${count} músicas adicionadas à fila`);
-        if(errors > 0) {
-            let msg = `Ocorreu erro em ${errors} caso(s). `
-            msg += `Talvez o vídeo foi excluído ou está privado!`;
-            message.channel.send(msg);
+        if(items.length) {
+            message.channel.send(`${count} músicas adicionadas à fila`);
+            if(errors > 0) {
+                let msg = `Ocorreu erro em ${errors} caso(s). `
+                msg += `Talvez o vídeo foi excluído ou está privado!`;
+                message.channel.send(msg);
+            }
+    
+            await message.member.voice.channel.join()
+                .then(con => {
+                    options.queue.boundConnection(con,
+                        message.channel, message.guild.id);
+                    options.queue.play(message.guild.id, false);
+                });
         }
-
-        await message.member.voice.channel.join()
-            .then(con => {
-                options.queue.boundConnection(con,
-                    message.channel, message.guild.id);
-                options.queue.play(message.guild.id, false);
-            });
     },
         
     async reqs(url, items) {
@@ -78,6 +80,9 @@ module.exports = {
                     } else {
                         npt = false;
                     }
+                }).catch(err => { 
+                    console.log(err);
+                    npt = false; 
                 });
         }
         return items;
