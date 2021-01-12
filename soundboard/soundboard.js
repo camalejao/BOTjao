@@ -14,10 +14,29 @@ module.exports = {
         await db.getSoundBoard(message.guild.id).then((sb) => sounds = sb);
 
         if(sounds.length) {
-            let msg = "```Sound effects disponíveis:\n\n";
-            sounds.forEach((sound) => msg += sound.title + '\n');
-            msg += "\nPara dar play, use: " + prefix + "sound nomedosoundeffect\n```";
-            message.channel.send(msg);
+            let embed = {
+                title: `Soundboard de ${message.guild.name}`,
+                color: 0x0099ff,
+                fields: []
+            };
+
+            let soundList = '';
+            sounds.forEach(s => {
+                if(soundList.length <= 1000)
+                    soundList += '`' + s.title + '` • ';
+            });
+            soundList = soundList.slice(0, -3);
+
+            embed.fields.push({
+                name: 'Sound effects disponíveis',
+                value: soundList
+            });
+            embed.fields.push({
+                name: 'Como dar play',
+                value: 'Use `' + prefix + 'sound nomedosoundeffect`'
+            });
+
+            message.channel.send({ embed: embed });
         } else {
             let m = 'A soundboard está vazia, use `' + prefix;
             m += 'help addsound` para saber como adicionar áudios';

@@ -96,23 +96,32 @@ class Queue {
         return Object.keys(gq.dispatcher).length;
     }
 
-    checkQueue(guildId, channel) {
-        let gq = this.getQueue(guildId);
+    checkQueue(guild, channel) {
+        let gq = this.getQueue(guild.id);
 
         if(!gq.songs.length) {
             channel.send('Fila vazia');
         } else {
-            let msg = 'Próximas músicas:\n';
-            let i = 0;
+            let embed = {
+                title: `Fila de músicas de ${guild.name}`,
+                color: 0x0099ff,
+                fields: []
+            };
+            let i = 0, songList = '';
             for(let s of gq.songs) {
-                if (msg.length >= 1800) {
-                    msg += `E mais ${gq.songs.length - i}, mas não cabe(m) nessa mensagem!\n`
+                if (songList.length >= 850) {
+                    songList += `E mais ${gq.songs.length - i}, mas não cabe(m) nessa mensagem!\n`
                     break;
                 }
-                msg += `${++i}. ${s.title}\n`;
+                songList += `${++i}. ${s.title}\n`;
             }
-            msg += `\nTotal de ${gq.songs.length} música(s) na fila`;
-            gq.channel.send(msg);
+            songList += `\nTotal de ${gq.songs.length} música(s) na fila`;
+            embed.fields.push({
+                name: 'Próximas músicas',
+                value: songList
+            });
+
+            channel.send({ embed: embed }).catch(console.error);
         }
     }
 

@@ -7,6 +7,6 @@ module.exports = {
     music: true,
     category: 'music',
     execute(message, options) {
-        options.queue.checkQueue(message.guild.id, message.channel);
+        options.queue.checkQueue(message.guild, message.channel);
     }
 }
