@@ -36,9 +36,10 @@ module.exports = {
             .then(res => {
                 const dist = res.data.data.dist;
                 const posts = res.data.data.children;
-                let n = Math.floor(Math.random() * dist);
-                while (posts[n].data.post_hint != "image") {
+                let n = Math.floor(Math.random() * dist), i = 0;
+                while (posts[n].data.post_hint != "image" && i <= dist) {
                     n = Math.floor(Math.random() * dist);
+                    i += 1;
                 }
                 imgUrl =  posts[n].data.url;
             })
