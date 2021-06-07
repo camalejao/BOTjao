@@ -34,7 +34,7 @@ module.exports = {
                     .then(r => {
                         let items = r.items.filter(i => i.type === 'video');
                         song.title = items[0].title;
-                        song.url = items[0].link;
+                        song.url = items[0].url;
                     }).catch(err => {
                         console.log(err);
                         error += 1;
