@@ -1,8 +1,8 @@
 const Q = require('./queue.js');
 const fs = require('fs');
+const path = require('path');
 const { prefix } = require('./config.json');
 
-const axios = require('axios');
 const util = require('./util.js');
 const msgs = util.messages;
 
@@ -14,9 +14,12 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
 
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const soundboardFiles = fs.readdirSync('./soundboard').filter(file => file.endsWith('.js'));
-const musicFiles = fs.readdirSync('./music').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync(path.resolve(__dirname, './commands'))
+    .filter(file => file.endsWith('.js'));
+const soundboardFiles = fs.readdirSync(path.resolve(__dirname, './soundboard'))
+    .filter(file => file.endsWith('.js'));
+const musicFiles = fs.readdirSync(path.resolve(__dirname, './music'))
+    .filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
@@ -27,8 +30,8 @@ for (const file of soundboardFiles) {
 	bot.commands.set(sbCommand.name, sbCommand);
 }
 for (const file of musicFiles) {
-	const sbCommand = require(`./music/${file}`);
-	bot.commands.set(sbCommand.name, sbCommand);
+	const musicCommand = require(`./music/${file}`);
+	bot.commands.set(musicCommand.name, musicCommand);
 }
 
 bot.once("ready", () => {
