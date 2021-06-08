@@ -1,5 +1,6 @@
 module.exports = {
     name: 'skip',
+    aliases: 'next',
     description: 'Passa faixa atual da fila de músicas',
     voice: true,
     guildOnly: true,

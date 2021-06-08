@@ -8,8 +8,8 @@ const ytPlaylist = require('./youtube');
 module.exports = {
     name: 'play',
     aliases: ['p'],
-    description: 'Toca música do youtube',
-    usage: 'link do vídeo OU termo de busca',
+    description: 'Toca música do youtube, playlist do youtube, playlist do spotify ou álbum do spotify',
+    usage: 'Algum dos seguintes: link de vídeo do youtube, termo de busca, link de playlist do youtube, link de playlist no spotify, ou link de álbum do spotify',
     args: true,
     voice: true,
     guildOnly: true,
