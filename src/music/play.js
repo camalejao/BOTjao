@@ -1,6 +1,9 @@
-const util = require('../util.js');
 const ytsr = require('ytsr');
 const ytdl = require('ytdl-core-discord');
+
+const spotifyPlaylist = require('./spotify');
+const spotifyAlbum = require('./album');
+const ytPlaylist = require('./youtube');
 
 module.exports = {
     name: 'play',
@@ -14,6 +17,25 @@ module.exports = {
     category: 'music',
 
     async execute(message, options) {
+        let url = options.args[0];
+        console.log(url)
+        
+        const ytPlaylistMatches = url.match(/(?<=youtube.com\/playlist\?list=)([A-Za-z0-9-_]*)/);
+        const spotifyPlaylistMatches = url.match(/(?<=spotify.com\/playlist\/)([A-Za-z0-9-_]*)/);
+        const spotifyAlbumMatches = url.match(/(?<=spotify.com\/album\/)([A-Za-z0-9-_]*)/);
+
+        if (ytPlaylistMatches) {
+            ytPlaylist.execute(message, options);
+        } else if (spotifyPlaylistMatches) {
+            spotifyPlaylist.execute(message, options);
+        } else if (spotifyAlbumMatches) {
+            spotifyAlbum.execute(message, options);
+        } else {
+            this.play(message, options);
+        }
+    },
+
+    async play(message, options) {
         let url = options.args[0];
         let query = options.args.join(' ');
 

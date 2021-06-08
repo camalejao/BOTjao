@@ -39,7 +39,7 @@ module.exports = {
                     .then(r => {
                         let items = r.items.filter(i => i.type === 'video');
                         song.title = items[0].title;
-                        song.url = items[0].link;
+                        song.url = items[0].url;
                         songs.push(song);
                     }).catch(err => {
                         console.log(err);
@@ -81,7 +81,8 @@ module.exports = {
                     } else {
                         next = false;
                     }
-                });
+                })
+                .catch(err => console.log(err));
         }
         return items.map(i => {
             let string = i.name + ' ';
