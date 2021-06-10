@@ -1,15 +1,8 @@
-const util = require('../util');
+const util = require('../../util');
 const ytsr = require('ytsr');
 
 module.exports = {
-    name: 'spotify',
-    description: 'Toca playlist do spotify',
-    usage: 'linkdaplaylist',
-    args: true,
-    voice: true,
-    guildOnly: true,
-    music: true,
-    category: 'music',
+
     async execute(message, options) {
         let args = options.args;
         let playlistId = args.join("").split("/").pop();

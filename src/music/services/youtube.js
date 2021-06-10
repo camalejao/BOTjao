@@ -1,17 +1,8 @@
-const util = require('../util.js');
+const util = require('../../util');
 const axios = require('axios');
 const ytdl = require('ytdl-core-discord');
 
 module.exports = {
-    name: 'youtube',
-    aliases: ['yt'],
-    description: 'Toca playlist do youtube',
-    usage: 'linkdaplaylist',
-    args: true,
-    voice: true,
-    guildOnly: true,
-    music: true,
-    category: 'music',
 
     async execute(message, options) {
         let args = options.args.join("");

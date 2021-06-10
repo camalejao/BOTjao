@@ -1,15 +1,15 @@
 const ytsr = require('ytsr');
 const ytdl = require('ytdl-core-discord');
 
-const spotifyPlaylist = require('./spotify');
-const spotifyAlbum = require('./album');
-const ytPlaylist = require('./youtube');
+const spotifyPlaylist = require('./services/spotify');
+const spotifyAlbum = require('./services/album');
+const ytPlaylist = require('./services/youtube');
 
 module.exports = {
     name: 'play',
-    aliases: ['p'],
-    description: 'Toca música do youtube, playlist do youtube, playlist do spotify ou álbum do spotify',
-    usage: 'Algum dos seguintes: link de vídeo do youtube, termo de busca, link de playlist do youtube, link de playlist no spotify, ou link de álbum do spotify',
+    aliases: ['p', 'yt', 'youtube', 'spotify', 'album', 'musica', 'music'],
+    description: 'Comando para tocar músicas. Pode ser um vídeo/playlist do youtube ou um álbum/playlist do spotify.',
+    usage: 'Você pode mandar o link de um vídeo ou playlist do youtube, ou então o link de um álbum ou playlist do spotify. Se não mandar um link, a mensagem que você enviar será pesquisada no youtube, e será tocado o primeiro resultado encontrado.',
     args: true,
     voice: true,
     guildOnly: true,

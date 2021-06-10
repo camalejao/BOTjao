@@ -1,16 +1,9 @@
-const util = require('../util.js');
+const util = require('../../util');
 const axios = require('axios');
 const ytsr = require('ytsr');
 
 module.exports = {
-    name: 'album',
-    description: 'Toca álbum do spotify',
-    usage: 'link do álbum',
-    args: true,
-    voice: true,
-    guildOnly: true,
-    music: true,
-    category: 'music',
+
     async execute(message, options) {
         let args = options.args;
         let albumId = args.join("").split("/").pop();
