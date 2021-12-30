@@ -3,13 +3,14 @@ const ytdl = require('ytdl-core-discord');
 
 const spotifyPlaylist = require('./services/spotify');
 const spotifyAlbum = require('./services/album');
+const spotifyTrack = require('./services/track');
 const ytPlaylist = require('./services/youtube');
 
 module.exports = {
     name: 'play',
     aliases: ['p', 'yt', 'youtube', 'spotify', 'album', 'musica', 'music'],
-    description: 'Comando para tocar músicas. Pode ser um vídeo/playlist do youtube ou um álbum/playlist do spotify.',
-    usage: 'Você pode mandar o link de um vídeo ou playlist do youtube, ou então o link de um álbum ou playlist do spotify. Se não mandar um link, a mensagem que você enviar será pesquisada no youtube, e será tocado o primeiro resultado encontrado.',
+    description: 'Comando para tocar músicas. Pode ser um vídeo/playlist do youtube ou um álbum/música/playlist do spotify.',
+    usage: 'Você pode mandar o link de um vídeo ou playlist do youtube, ou então o link de um álbum/música/playlist do spotify. Se não mandar um link, a mensagem que você enviar será pesquisada no youtube, e será tocado o primeiro resultado encontrado.',
     args: true,
     voice: true,
     guildOnly: true,
@@ -23,6 +24,7 @@ module.exports = {
         const ytPlaylistMatches = url.match(/(?<=youtube.com\/playlist\?list=)([A-Za-z0-9-_]*)/);
         const spotifyPlaylistMatches = url.match(/(?<=spotify.com\/playlist\/)([A-Za-z0-9-_]*)/);
         const spotifyAlbumMatches = url.match(/(?<=spotify.com\/album\/)([A-Za-z0-9-_]*)/);
+        const spotifyTrackMatches = url.match(/(?<=spotify.com\/track\/)([A-Za-z0-9-_]*)/);
 
         if (ytPlaylistMatches) {
             ytPlaylist.execute(message, options);
@@ -30,6 +32,8 @@ module.exports = {
             spotifyPlaylist.execute(message, options);
         } else if (spotifyAlbumMatches) {
             spotifyAlbum.execute(message, options);
+        } else if (spotifyTrackMatches) {
+            spotifyTrack.execute(message, options);
         } else {
             this.play(message, options);
         }
