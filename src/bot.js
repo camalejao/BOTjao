@@ -55,6 +55,8 @@ bot.on("message", async message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
 
     const commandName = args.shift().toLowerCase();
+    if (!commandName) return;
+
     const command = bot.commands.get(commandName)
     || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
