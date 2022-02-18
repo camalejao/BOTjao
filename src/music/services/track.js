@@ -27,7 +27,7 @@ module.exports = {
             let searchURL = 'https://www.youtube.com/results?search_query=';
             searchURL += `${encodeURIComponent(query)}&sp=EgIQAQ%253D%253D`;
                 
-            await ytsr(searchURL, {gl: 'BR', hl: 'pt', limit: 1})
+            await ytsr(searchURL, util.getYtsrSearchOptions())
                 .then(r => {
                     let items = r.items.filter(i => i.type === 'video');
                     song.title = items[0].title;

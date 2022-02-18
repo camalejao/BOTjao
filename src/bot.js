@@ -7,6 +7,7 @@ const util = require('./util.js');
 const msgs = util.messages;
 
 const queue = new Q();
+const silentCons = new Set();
 
 const database = require('./database');
 
@@ -107,8 +108,13 @@ bot.on("message", async message => {
 bot.setInterval(() => {
     bot.voice.connections.each(con => {
         if(con.channel.members.filter(m => m.user.bot === false).size === 0) {
-            con.channel.leave();
-            queue.clearQueue(con.channel.guild.id);
+            if (silentCons.has(con.channel.guild.id)) {
+                con.channel.leave();
+                queue.clearQueue(con.channel.guild.id);
+                silentCons.delete(con.channel.guild.id);
+            } else {
+                silentCons.add(con.channel.guild.id);
+            }
         }
     });
 }, 300000, bot);

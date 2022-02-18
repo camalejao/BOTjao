@@ -31,7 +31,7 @@ module.exports = {
             let count = 0, errors = 0;
             await Promise.all(queries.map(async (query) => {
                 try {
-                    await ytsr(query, {gl: 'BR', hl: 'pt', limit: 1})
+                    await ytsr(query, util.getYtsrSearchOptions())
                         .then(r => {
                             let items = r.items.filter(i => i.type === 'video');
                             let song = {

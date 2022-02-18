@@ -81,4 +81,7 @@ module.exports = {
         }
     },
     
+    getYtsrSearchOptions() {
+        return { gl: 'BR', hl: 'pt', limit: 10 };
+    }
 }

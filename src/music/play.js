@@ -1,3 +1,5 @@
+const util = require('../util');
+
 const ytsr = require('ytsr');
 const ytdl = require('ytdl-core-discord');
 
@@ -56,7 +58,7 @@ module.exports = {
                 });
         } else {
             try {
-                await ytsr(query, {gl: 'BR', hl: 'pt', limit: 1})
+                await ytsr(query, util.getYtsrSearchOptions())
                     .then(r => {
                         let items = r.items.filter(i => i.type === 'video');
                         song.title = items[0].title;
